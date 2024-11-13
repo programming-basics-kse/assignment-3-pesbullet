@@ -15,3 +15,6 @@ def display_error_and_exit(error_value):
 
 def display_warning(warning_value):
     print("[WARNING]: " + warning_value)
+
+def display_progress(progress_value):
+    print("[PROGRESS]: " + progress_value)
