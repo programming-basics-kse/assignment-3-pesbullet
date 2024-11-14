@@ -36,12 +36,13 @@ if args.medals is not None:
             received_year = received_year
             break
 
+    received_team_code = received_team_code.lstrip().rstrip()
+
     if received_team_code is None or received_team_code == "":
         display_error_and_exit("Team argument is empty! Aborting")
     if received_year is None:
         display_error_and_exit("Year argument is not a valid int. Aborting")
 
-    display_progress("Loaded team: " + received_team_code)
     display_progress("Loaded year: " + str(received_year))
 
     found_NOC = None
@@ -50,16 +51,19 @@ if args.medals is not None:
             found_NOC = NOC
             break
 
+    found_team = None
     for TEAM_CODE in ALL_TEAMS:
         if received_team_code == TEAM_CODE:
-            found_NOC = "1"
-            # TODO convert team to NOC
+            found_team = TEAM_CODE
             break
 
-    if found_NOC is None:
-        display_error_and_exit("No NOC found! Aborting")
+    if found_NOC is None and found_team is None:
+        display_error_and_exit("No NOC or team found! Aborting")
 
-    display_progress("Loaded NOC: " + found_NOC)
+    if found_team is None:
+        display_progress("Loaded NOC: " + found_NOC)
+    else:
+        display_progress("Loaded team: " + found_team)
 
     # TODO print data
 
@@ -78,6 +82,7 @@ elif args.total is not None:
 elif args.overall is not None:
     received_teams = args.overall
     found_NOCs = []
+    found_teams = []
     for team in received_teams:
         for NOC in ALL_NOCS:
             if team == NOC:
@@ -90,7 +95,7 @@ elif args.overall is not None:
                 new_value = ' '.join(received_teams[0:i]).lstrip().rstrip()
 
                 if new_value == TEAM_CODE.lstrip().rstrip():
-                    found_NOCs.append(TEAM_CODE) # TODO convert team to NOC
+                    found_teams.append(TEAM_CODE)
                     for j in range(len(received_teams)):
                         del received_teams[0]
                     break
@@ -101,7 +106,8 @@ elif args.overall is not None:
             del received_teams[0]
         break
 
-    display_progress("Loaded teams: " + str(found_NOCs))
+    display_progress("Loaded NOCs: " + str(found_NOCs))
+    display_progress("Loaded teams: " + str(found_teams))
 
     # TODO print data
 
@@ -110,6 +116,7 @@ elif args.interactive is not None:
     while True:
         user_input = input("Enter team: ")
         found_NOC = None
+        found_team = None
 
         if user_input == INTERACTIVE_MODE_EXIT_COMMAND:
             exit()
@@ -121,13 +128,15 @@ elif args.interactive is not None:
 
         for TEAM_CODE in ALL_TEAMS:
             if user_input == TEAM_CODE:
-                found_NOC = "1"
-                # TODO convert team to NOC
+                found_team = TEAM_CODE
                 break
 
-        if found_NOC is None:
-            print("[ERROR]: No NOC found!")
+        if found_NOC is None and found_team is None:
+            print("[ERROR]: No NOC or team found!")
             continue
 
-        display_progress("Loaded NOC: " + found_NOC)
+        if found_team is None:
+            display_progress("Loaded NOC: " + found_NOC)
+        else:
+            display_progress("Loaded team: " + found_team)
         # TODO print data
