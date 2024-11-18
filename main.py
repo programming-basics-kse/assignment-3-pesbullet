@@ -13,7 +13,7 @@ input_file_name = args.filename
 if not os.path.isfile(input_file_name):
     display_error_and_exit("Input file does not exist")
 
-df = pd.read_csv(input_file_name, sep="\t")
+df = pd.read_csv(input_file_name)
 
 ALL_TEAMS = get_unique_names(df=df, column_name="Team")
 ALL_NOCS = get_unique_names(df=df, column_name="NOC")
@@ -21,6 +21,7 @@ ALL_NOCS = get_unique_names(df=df, column_name="NOC")
 output_file_name = None
 if args.__contains__("output"):
     output_file_name = args.output
+
 if args.medals is not None:
     if len(args.medals) < 2:
         display_error_and_exit("Medals lacks arguments! Aborting")
