@@ -2,8 +2,9 @@ import os
 
 import pandas as pd
 from args_init import parser
-from data_handling import get_unique_names
-from utils import validate_and_convert_int, display_error_and_exit, display_progress
+from data_handling import get_unique_names, get_medals_by_team_and_year, get_total_by_year, get_teams_overall, \
+    get_stat_by_team
+from utils import validate_and_convert_int, display_error_and_exit, display_progress, display_warning
 
 INTERACTIVE_MODE_EXIT_COMMAND = "-exit"
 
@@ -66,11 +67,14 @@ if args.medals is not None:
     else:
         display_progress("Loaded team: " + found_team)
 
-    # TODO print data
+    loaded_data = ""
+    for element in get_medals_by_team_and_year(df=df, year=received_year, noc=found_NOC, team=found_team):
+        print(element)
+        loaded_data += str(element) + "\n"
 
     if output_file_name is not None:
         with open(output_file_name, "w") as output_file:
-            output_file.write("saf +\n + hello saf! \n !!!")
+            output_file.write(loaded_data)
             display_progress("Writing output to file")
 
 elif args.total is not None:
@@ -78,8 +82,18 @@ elif args.total is not None:
     year = validate_and_convert_int(year)
     if year is None:
         display_error_and_exit("Year argument is not a valid int. Aborting")
-    print(year)
-    # TODO print data
+    print("Received year: " + str(year))
+
+    loaded_data = ""
+    for element in get_total_by_year(df=df, year=year):
+        print(element)
+        loaded_data += str(element) + "\n"
+
+    if output_file_name is not None:
+        with open(output_file_name, "w") as output_file:
+            output_file.write(loaded_data)
+            display_progress("Writing output to file")
+
 elif args.overall is not None:
     received_teams = args.overall
     found_NOCs = []
@@ -109,8 +123,19 @@ elif args.overall is not None:
 
     display_progress("Loaded NOCs: " + str(found_NOCs))
     display_progress("Loaded teams: " + str(found_teams))
+    if len(found_teams) > 1:
+        display_warning("Sorry NOC are not supported")
 
-    # TODO print data
+    loaded_data = ""
+    for element in get_teams_overall(df=df, teams=tuple(found_teams)):
+        print(element)
+        loaded_data += str(element) + "\n"
+
+    if output_file_name is not None:
+        with open(output_file_name, "w") as output_file:
+            output_file.write(loaded_data)
+            display_progress("Writing output to file")
+
 
 elif args.interactive is not None:
     display_progress("Interactive mode entered")
@@ -140,4 +165,13 @@ elif args.interactive is not None:
             display_progress("Loaded NOC: " + found_NOC)
         else:
             display_progress("Loaded team: " + found_team)
-        # TODO print data
+
+        loaded_data = ""
+        for element in get_stat_by_team(df=df, noc=found_NOC, team=found_team):
+            print(element)
+            loaded_data += str(element) + "\n"
+
+        if output_file_name is not None:
+            with open(output_file_name, "w") as output_file:
+                output_file.write(loaded_data)
+                display_progress("Writing output to file")
