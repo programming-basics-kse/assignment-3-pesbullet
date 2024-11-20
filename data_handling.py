@@ -80,8 +80,8 @@ def get_stat_by_team(df: DataFrame, noc=None, team=None) -> Iterable:
 
     result_str_list = []
 
-    first_year = filtered_df["Year"].iloc[0]
-    first_city = filtered_df["City"].iloc[0]
+    first_year = filtered_df["Year"][0]
+    first_city = filtered_df["City"][0]
     result_str_list.append(f"{team or noc} first time participated Olympics in {first_year}. It was in {first_city}")
 
     medals = pd.get_dummies(
@@ -113,14 +113,14 @@ def get_stat_by_team(df: DataFrame, noc=None, team=None) -> Iterable:
 
 # HERE IS AN EXAMPLE HOW TO USE THIS FUNCS AND PRINT RESULTS THROUGH THE SAME
 #
-# df = pd.read_csv("athlete_events.csv")
+#df = pd.read_csv("athlete_events.csv")
 #
 # func_output = get_medals_by_team_and_year(df=df, team="Finland", year=1920)
-# func_output = get_total_by_year(df=df, year=1920)
-# func_output = get_teams_overall(df=df, teams=("Finland", "Norway", "Ukraine"))
+#func_output = get_total_by_year(df=df, year=1920)
+#func_output = get_teams_overall(df=df, teams=("Finland", "Norway", "Ukraine"))
 # func_output = get_stat_by_team(df=df, team="Ukraine")
 #
-# for element in func_output:
-#     print(element)
+#for element in func_output:
+#    print(element)
 
 

@@ -19,9 +19,7 @@ df = pd.read_csv(input_file_name)
 ALL_TEAMS = get_unique_names(df=df, column_name="Team")
 ALL_NOCS = get_unique_names(df=df, column_name="NOC")
 
-output_file_name = None
-if args.__contains__("output"):
-    output_file_name = args.output
+loaded_data = ""
 
 if args.medals is not None:
     if len(args.medals) < 2:
@@ -61,21 +59,14 @@ if args.medals is not None:
 
     if found_NOC is None and found_team is None:
         display_error_and_exit("No NOC or team found! Aborting")
-
-    if found_team is None:
-        display_progress("Loaded NOC: " + found_NOC)
-    else:
+    elif found_team is not None:
         display_progress("Loaded team: " + found_team)
+    else:
+        display_progress("Loaded NOC: " + found_NOC)
 
-    loaded_data = ""
     for element in get_medals_by_team_and_year(df=df, year=received_year, noc=found_NOC, team=found_team):
         print(element)
         loaded_data += str(element) + "\n"
-
-    if output_file_name is not None:
-        with open(output_file_name, "w") as output_file:
-            output_file.write(loaded_data)
-            display_progress("Writing output to file")
 
 elif args.total is not None:
     year = args.total
@@ -84,15 +75,9 @@ elif args.total is not None:
         display_error_and_exit("Year argument is not a valid int. Aborting")
     print("Received year: " + str(year))
 
-    loaded_data = ""
     for element in get_total_by_year(df=df, year=year):
         print(element)
         loaded_data += str(element) + "\n"
-
-    if output_file_name is not None:
-        with open(output_file_name, "w") as output_file:
-            output_file.write(loaded_data)
-            display_progress("Writing output to file")
 
 elif args.overall is not None:
     received_teams = args.overall
@@ -106,7 +91,7 @@ elif args.overall is not None:
 
     while len(received_teams) > 0:
         for TEAM_CODE in ALL_TEAMS:
-            for i in range(0,7):
+            for i in range(0, 7):
                 new_value = ' '.join(received_teams[0:i]).lstrip().rstrip()
 
                 if new_value == TEAM_CODE.lstrip().rstrip():
@@ -126,16 +111,9 @@ elif args.overall is not None:
     if len(found_teams) > 1:
         display_warning("Sorry NOC are not supported")
 
-    loaded_data = ""
     for element in get_teams_overall(df=df, teams=tuple(found_teams)):
         print(element)
         loaded_data += str(element) + "\n"
-
-    if output_file_name is not None:
-        with open(output_file_name, "w") as output_file:
-            output_file.write(loaded_data)
-            display_progress("Writing output to file")
-
 
 elif args.interactive is not None:
     display_progress("Interactive mode entered")
@@ -160,18 +138,16 @@ elif args.interactive is not None:
         if found_NOC is None and found_team is None:
             print("[ERROR]: No NOC or team found!")
             continue
-
-        if found_team is None:
-            display_progress("Loaded NOC: " + found_NOC)
-        else:
+        elif found_team is not None:
             display_progress("Loaded team: " + found_team)
+        else:
+            display_progress("Loaded NOC: " + found_NOC)
 
-        loaded_data = ""
         for element in get_stat_by_team(df=df, noc=found_NOC, team=found_team):
             print(element)
             loaded_data += str(element) + "\n"
 
-        if output_file_name is not None:
-            with open(output_file_name, "w") as output_file:
-                output_file.write(loaded_data)
-                display_progress("Writing output to file")
+if args.output is not None:
+    with open(str(args.output), "w") as output_file:
+        output_file.write(loaded_data)
+        display_progress("Writing output to file")
