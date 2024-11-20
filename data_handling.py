@@ -131,5 +131,6 @@ def get_stat_by_age_and_sex(df: DataFrame, is_male: bool, min_age: int, max_age:
 
     result_df = medals.groupby(["Name", "Sex"], as_index=False).sum()
     result_df["Total"] = result_df["Bronze"] + result_df["Silver"] + result_df["Gold"]
+    result_df = result_df.sort_values(by="Total", ascending=False)
 
     return result_df.to_string(index=False),

@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 from args_init import parser
-from config import INTERACTIVE_MODE_EXIT_COMMAND
+from config import INTERACTIVE_MODE_EXIT_COMMAND, MAX_COMMAND_WORD_SIZE
 from data_handling import get_unique_names, get_medals_by_team_and_year, get_total_by_year, get_teams_overall, \
     get_stat_by_team, get_stat_by_age_and_sex
 from utils import validate_and_convert_int, display_error_and_exit, display_progress, display_warning
@@ -89,7 +89,7 @@ elif args.overall is not None:
 
     while len(received_teams) > 0:
         for TEAM_CODE in ALL_TEAMS:
-            for i in range(0, 7):
+            for i in range(0, MAX_COMMAND_WORD_SIZE):
                 new_value = ' '.join(received_teams[0:i]).lstrip().rstrip()
 
                 if new_value == TEAM_CODE.lstrip().rstrip():
