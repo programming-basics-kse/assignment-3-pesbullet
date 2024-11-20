@@ -117,21 +117,19 @@ def get_stat_by_team(df: DataFrame, noc=None, team=None) -> Iterable:
 def get_stat_by_age_and_sex(df: DataFrame, is_male: bool, min_age: int, max_age: int) -> Iterable:
     sex_char = "M" if is_male else "F"
 
-    validated_df = df[(df["Sex"].notna()) & (df["Age"].notna())]
+    validated_df = df[(df["Sex"].notna()) & (df["Age"].notna()) & (df["Medal"].notna())]
     filtered_df = validated_df[
         (validated_df["Sex"] == sex_char)
         & (validated_df["Age"] >= min_age)
         & (validated_df["Age"] <= max_age)
         ]
-    simplified_df = filtered_df.loc[:, ["Name", "Sex", "Age"]]
 
     medals = pd.get_dummies(
         filtered_df, columns=["Medal"], dtype=int, prefix="", prefix_sep=""
     )
-    medals = medals.loc[:, ["Name", "Bronze", "Silver", "Gold"]]
+    medals = medals.loc[:, ["Name", "Sex", "Bronze", "Silver", "Gold"]]
 
-    simplified_df["Bronze"] = medals["Bronze"]
-    simplified_df["Silver"] = medals["Silver"]
-    simplified_df["Gold"] = medals["Gold"]
+    result_df = medals.groupby(["Name", "Sex"], as_index=False).sum()
+    result_df["Total"] = result_df["Bronze"] + result_df["Silver"] + result_df["Gold"]
 
-    return simplified_df.to_string(index=False),
+    return result_df.to_string(index=False),

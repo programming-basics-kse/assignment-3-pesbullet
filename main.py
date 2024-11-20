@@ -146,8 +146,6 @@ elif args.interactive:
             loaded_data += str(element) + "\n"
 
 elif args.champions is not None:
-    if len(args.champions) != 3:
-        display_error_and_exit("Champions lacks arguments! Aborting")
 
     gender, min_age, max_age = args.champions
 
@@ -163,6 +161,7 @@ elif args.champions is not None:
     for element in get_stat_by_age_and_sex(df=df, is_male=is_male, min_age=min_age, max_age=max_age):
         print(element)
         loaded_data += str(element) + "\n"
+
 
 if args.output is not None:
     with open(str(args.output), "w") as output_file:
