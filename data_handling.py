@@ -113,5 +113,12 @@ def get_stat_by_team(df: DataFrame, noc=None, team=None) -> Iterable:
 
     return result_str_list
 
+def get_stat_by_age_and_sex(df: DataFrame, is_male: bool, age_group: int) -> Iterable:
+    """
+    age groups:
+    1: 12-18
 
 
+    5:   -85
+    """
+    pass
