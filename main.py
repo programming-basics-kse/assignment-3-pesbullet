@@ -106,7 +106,7 @@ elif args.overall is not None:
 
     while len(received_teams) > 0:
         for TEAM_CODE in ALL_TEAMS:
-            for i in range(0,7):
+            for i in range(0, 7):
                 new_value = ' '.join(received_teams[0:i]).lstrip().rstrip()
 
                 if new_value == TEAM_CODE.lstrip().rstrip():
