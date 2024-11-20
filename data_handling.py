@@ -113,16 +113,5 @@ def get_stat_by_team(df: DataFrame, noc=None, team=None) -> Iterable:
 
     return result_str_list
 
-# HERE IS AN EXAMPLE HOW TO USE THIS FUNCS AND PRINT RESULTS THROUGH THE SAME
-#
-df = pd.read_csv("athlete_events.csv")
-#
-# func_output = get_medals_by_team_and_year(df=df, team="Finland", year=1920)
-# func_output = get_total_by_year(df=df, year=1920)
-# func_output = get_teams_overall(df=df, teams=("Finland", "Norway", "Ukraine"))
-func_output = get_stat_by_team(df=df, team="Ukraine")
-#
-# for element in func_output:
-#     print(element)
 
 
