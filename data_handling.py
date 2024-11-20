@@ -3,11 +3,10 @@ from typing import Iterable
 import pandas as pd
 from pandas import DataFrame
 
-from config import AGE_BY_GROUP
-
 
 def get_unique_names(df: DataFrame, column_name: str) -> list:
     return list(df[column_name].unique())
+
 
 def get_medals_by_team_and_year(df: DataFrame, year: int, noc=None, team=None) -> Iterable:
     if noc is not None:
@@ -114,14 +113,17 @@ def get_stat_by_team(df: DataFrame, noc=None, team=None) -> Iterable:
 
     return result_str_list
 
-def get_stat_by_age_and_sex(df: DataFrame, is_male: bool, age_group: int) -> Iterable:
+
+def get_stat_by_age_and_sex(df: DataFrame, is_male: bool, min_age: int, max_age: int) -> Iterable:
     sex_char = "M" if is_male else "F"
-    min_age = AGE_BY_GROUP[age_group][0]
-    max_age = AGE_BY_GROUP[age_group][1]
 
     validated_df = df[(df["Sex"].notna()) & (df["Age"].notna())]
-    filtered_df = validated_df[(validated_df["Sex"] == sex_char) & (validated_df["Age"] >= min_age) & (validated_df["Age"] <= max_age)]
-    simplified_df: DataFrame = filtered_df.loc[:, ["Name", "Sex", "Age"]]
+    filtered_df = validated_df[
+        (validated_df["Sex"] == sex_char)
+        & (validated_df["Age"] >= min_age)
+        & (validated_df["Age"] <= max_age)
+        ]
+    simplified_df = filtered_df.loc[:, ["Name", "Sex", "Age"]]
 
     medals = pd.get_dummies(
         filtered_df, columns=["Medal"], dtype=int, prefix="", prefix_sep=""

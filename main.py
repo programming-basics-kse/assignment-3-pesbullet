@@ -2,8 +2,9 @@ import os
 
 import pandas as pd
 from args_init import parser
+from config import INTERACTIVE_MODE_EXIT_COMMAND
 from data_handling import get_unique_names, get_medals_by_team_and_year, get_total_by_year, get_teams_overall, \
-    get_stat_by_team
+    get_stat_by_team, get_stat_by_age_and_sex
 from utils import validate_and_convert_int, display_error_and_exit, display_progress, display_warning
 
 args = parser.parse_args()
@@ -112,7 +113,7 @@ elif args.overall is not None:
         print(element)
         loaded_data += str(element) + "\n"
 
-elif args.interactive is not None:
+elif args.interactive:
     display_progress("Interactive mode entered")
     while True:
         user_input = input("Enter team: ")
@@ -143,6 +144,25 @@ elif args.interactive is not None:
         for element in get_stat_by_team(df=df, noc=found_NOC, team=found_team):
             print(element)
             loaded_data += str(element) + "\n"
+
+elif args.champions is not None:
+    if len(args.champions) != 3:
+        display_error_and_exit("Champions lacks arguments! Aborting")
+
+    gender, min_age, max_age = args.champions
+
+    if gender.upper() != "F" and gender.upper() != "M":
+        display_error_and_exit("Gender must be M or F. So old-fashioned script...")
+    is_male = True if gender.upper() == "M" else False
+
+    try:
+        min_age, max_age = sorted([int(min_age), int(max_age)])
+    except ValueError:
+        display_error_and_exit("Min and max age must be whole numbers")
+
+    for element in get_stat_by_age_and_sex(df=df, is_male=is_male, min_age=min_age, max_age=max_age):
+        print(element)
+        loaded_data += str(element) + "\n"
 
 if args.output is not None:
     with open(str(args.output), "w") as output_file:
