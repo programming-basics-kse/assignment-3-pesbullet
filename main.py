@@ -6,9 +6,6 @@ from data_handling import get_unique_names, get_medals_by_team_and_year, get_tot
     get_stat_by_team
 from utils import validate_and_convert_int, display_error_and_exit, display_progress, display_warning
 
-INTERACTIVE_MODE_EXIT_COMMAND = "-exit"
-
-
 args = parser.parse_args()
 input_file_name = args.filename
 if not os.path.isfile(input_file_name):

@@ -1,3 +1,6 @@
+
+INTERACTIVE_MODE_EXIT_COMMAND = "-exit"
+
 AGE_BY_GROUP = {
     0:(12, 18),
     1:(19, 24),
